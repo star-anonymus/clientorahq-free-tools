@@ -1,21 +1,24 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-/** useState that survives reloads in this browser only (localStorage). Never throws. */
+function read<T>(key: string, initial: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw == null ? initial : (JSON.parse(raw) as T);
+  } catch {
+    return initial; // private mode, blocked storage or bad JSON
+  }
+}
+
+/**
+ * useState that survives reloads in this browser only (localStorage). Never throws.
+ * Tools render client-side only (ssr: false), so reading storage during the first
+ * render is safe — and it means a stale default can never overwrite saved data.
+ */
 export function useLocal<T>(key: string, initial: T) {
-  const [value, setValue] = useState<T>(initial);
-  const loaded = useRef(false);
+  const [value, setValue] = useState<T>(() => (typeof window === "undefined" ? initial : read(key, initial)));
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw != null) setValue(JSON.parse(raw) as T);
-    } catch { /* private mode or bad JSON: keep the default */ }
-    loaded.current = true;
-  }, [key]);
-
-  useEffect(() => {
-    if (!loaded.current) return;
     try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage full or blocked */ }
   }, [key, value]);
 

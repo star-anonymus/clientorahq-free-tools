@@ -36,6 +36,13 @@ const TOOLS: Record<string, ComponentType> = {
   "date-calculator": dynamic(() => import("@/tools/DateCalculator"), { ssr: false, loading: Loading }),
   "bmi-calculator": dynamic(() => import("@/tools/BmiCalculator"), { ssr: false, loading: Loading }),
   "pomodoro-timer": dynamic(() => import("@/tools/PomodoroTimer"), { ssr: false, loading: Loading }),
+  "split-pdf": dynamic(() => import("@/tools/SplitPdf"), { ssr: false, loading: Loading }),
+  "compress-pdf": dynamic(() => import("@/tools/CompressPdf"), { ssr: false, loading: Loading }),
+  "rotate-pdf": dynamic(() => import("@/tools/RotatePdf"), { ssr: false, loading: Loading }),
+  "pdf-to-jpg": dynamic(() => import("@/tools/PdfToJpg"), { ssr: false, loading: Loading }),
+  "sign-pdf": dynamic(() => import("@/tools/SignPdf"), { ssr: false, loading: Loading }),
+  "screen-recorder": dynamic(() => import("@/tools/ScreenRecorder"), { ssr: false, loading: Loading }),
+  "time-tracker": dynamic(() => import("@/tools/TimeTracker"), { ssr: false, loading: Loading }),
 };
 
 export default function ToolLoader({ slug }: { slug: string }) {
