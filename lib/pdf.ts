@@ -55,8 +55,6 @@ export async function pdfThumb(file: File, width = 160): Promise<{ url: string; 
   }
 }
 
-if (typeof window !== "undefined") (window as unknown as Record<string, unknown>).__pdfdbg = { openPdf, renderPage, getPdfJs };
-
 export function isPdf(f: File) {
   return f.type === "application/pdf" || /\.pdf$/i.test(f.name);
 }

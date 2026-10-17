@@ -10,6 +10,7 @@ Free PDF, image, text, business and everyday tools at **tools.clientorahq.com** 
 npm install          # npm cache is pinned to E:\DevCaches\npm-cache by .npmrc
 npm run dev          # http://localhost:4820
 npm run build        # static site in ./out
+npm start            # serve ./out on http://localhost:4821
 ```
 
 ## Layout
@@ -30,3 +31,11 @@ npm run build        # static site in ./out
 3. Map the slug in `components/ToolLoader.tsx`.
 
 The page, sitemap entry, structured data and nav links appear automatically.
+
+## Decisions
+
+- **No AI calls.** "AI" tools that would need a paid model are template-based instead: Resume Builder (bullet templates by role) and Cover Letter Generator (structured templates, three tones). The **AI Grammar Checker** from the old roadmap is left out: a grammar checker worth using needs a language model or a server (LanguageTool), and either one costs money per request.
+- **Background Remover** runs the IS-Net model in the browser via `@imgly/background-removal`. The model files (~80 MB, cached after the first use) come from IMG.LY's CDN; the photo never leaves the device. That library is **AGPL-3.0**, so keep this repository public (see DEPLOY.md).
+- **PDF text** in generated PDFs (invoice, resume, letter, sign) uses the built-in Helvetica font, so only Latin characters print; others become "?". Currency symbols the font can't draw fall back to the currency code (e.g. INR 1,000.00).
+
+See DEPLOY.md for push, Vercel and DNS steps.

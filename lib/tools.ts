@@ -47,7 +47,7 @@ const PRIVATE_FAQ: Faq = {
   a: "No. This tool runs entirely in your browser using JavaScript. Your file is read and processed on your own device and is never sent to ClientoraHQ or anyone else — you can even switch off your internet after the page loads.",
 };
 
-export const tools: ToolMeta[] = [
+const ALL: ToolMeta[] = [
   // ───────────────────────── PDF
   {
     slug: "merge-pdf",
@@ -299,7 +299,6 @@ export const tools: ToolMeta[] = [
     keywords: ["qr code generator", "free qr code", "wifi qr code", "vcard qr code", "qr code svg"],
     steps: ["Pick what the code should open: link, Wi-Fi, contact and more.", "Fill in the details and choose colours.", "Download PNG for print or SVG for designs."],
     features: ["Never expires — no tracking redirect", "Wi-Fi, vCard, WhatsApp, email, SMS", "Custom colours and error correction", "PNG up to 2048 px or SVG"],
-    isNew: true,
     faqs: [
       { q: "Do these QR codes expire?", a: "No. The data is written straight into the code, with no redirect through our servers, so it keeps working forever. Many paid QR sites use redirect links that stop working when you stop paying." },
       { q: "Can I track scans?", a: "Not with a static code — that is the trade-off for no expiry and no tracking. Add UTM tags to your link if you want to see scans in your analytics." },
@@ -317,7 +316,6 @@ export const tools: ToolMeta[] = [
     keywords: ["color palette generator", "colour palette from image", "hex color palette", "tailwind color palette"],
     steps: ["Press Generate (or the space bar) until you like it — lock colours to keep them.", "Or upload a photo to pull its main colours.", "Copy hex codes, CSS variables or Tailwind config."],
     features: ["Harmony modes: analogous, complementary, triad, mono", "Extract palette from an image", "WCAG contrast check", "Export hex, CSS, Tailwind, JSON"],
-    isNew: true,
     faqs: [
       { q: "How is the palette from an image made?", a: "The photo is read on a canvas in your browser and its pixels are grouped into the most common colours (k-means clustering). The photo is never uploaded." },
     ],
@@ -333,7 +331,6 @@ export const tools: ToolMeta[] = [
     keywords: ["markdown editor", "online markdown editor", "markdown to html", "markdown preview"],
     steps: ["Write Markdown on the left — use the toolbar if you like.", "Watch the formatted preview on the right.", "Copy the HTML or download .md / .html."],
     features: ["Live preview, GitHub-style", "Tables, task lists, code blocks", "Auto-saves in your browser", "Export .md, .html or copy HTML"],
-    isNew: true,
     faqs: [
       { q: "Where is my document saved?", a: "In your browser's local storage on this device only, so it is still there when you come back. Nothing is sent to a server. Clearing your browser data removes it." },
     ],
@@ -350,9 +347,9 @@ export const tools: ToolMeta[] = [
     keywords: ["invoice generator", "free invoice maker", "freelance invoice template", "invoice pdf"],
     steps: ["Fill in your details, your client and the invoice number.", "Add line items, tax and any discount.", "Download the PDF and send it to your client."],
     features: ["30+ currencies", "Tax, discount, notes and bank details", "Clean PDF, no watermark", "Your details remembered on this device"],
-    isNew: true,
     faqs: [
       { q: "Is this invoice legally valid?", a: "An invoice needs your details, the client's, a unique number, date, what you did and the amount — this tool covers all of that. Some countries need a tax/VAT number too; add it in your details." },
+      { q: "Can I write the invoice in Urdu, Arabic or Hindi?", a: "Not yet. The PDF uses a standard built-in font that covers English and other Latin-alphabet languages, which keeps the tool fast and fully offline. Currency symbols the font cannot draw, such as the rupee sign, are written as the code instead (INR, PKR)." },
       { q: "Do you keep a copy of my invoices?", a: "No. Your business details and the last invoice are saved only in your own browser so you don't retype them. We never see them." },
     ],
   },
@@ -368,7 +365,6 @@ export const tools: ToolMeta[] = [
     keywords: ["resume builder", "free resume builder", "cv maker", "ats resume template", "resume pdf"],
     steps: ["Fill in your details, experience, education and skills.", "Use the bullet ideas to describe your work with results.", "Pick a template and download your PDF."],
     features: ["ATS-friendly single column", "Bullet-point ideas by role", "Two clean templates", "Saved on your device, no account"],
-    isNew: true,
     faqs: [
       { q: "Is the resume ATS-friendly?", a: "Yes. The PDF uses real, selectable text in one column with standard headings (Experience, Education, Skills), which is what applicant tracking systems read best." },
       { q: "Does it use AI to write my resume?", a: "No — and that keeps it free and private. Instead you get proven bullet templates by role (action verb + task + result) that you fill in with your own numbers." },
@@ -385,7 +381,6 @@ export const tools: ToolMeta[] = [
     keywords: ["cover letter generator", "free cover letter", "cover letter template", "cover letter for freelancers"],
     steps: ["Enter the job title, company and hiring manager.", "Add your experience and two or three strengths with results.", "Pick a tone, edit the letter, then copy or download it."],
     features: ["Formal, friendly or confident tone", "Job, freelance-proposal and internship styles", "Edit before you download", "PDF or text"],
-    isNew: true,
     faqs: [
       { q: "Is this written by AI?", a: "No. It assembles a proven structure — hook, proof, fit, call to action — from what you type. It is instant, free and private, and you should still read it and make it sound like you." },
     ],
@@ -401,7 +396,6 @@ export const tools: ToolMeta[] = [
     keywords: ["date calculator", "age calculator", "days between dates", "add days to date", "working days calculator"],
     steps: ["Pick a calculator: age, between dates, add days or countdown.", "Choose your dates.", "Read the answer in years, months, weeks and days."],
     features: ["Exact age with next birthday", "Working days (skips weekends)", "Add or subtract days, weeks, months", "Live countdown"],
-    isNew: true,
     faqs: [
       { q: "Are the start and end dates counted?", a: "By default we count the days between the two dates, not including the end date — the way most calculators do. Tick 'include end date' to count both." },
     ],
@@ -417,7 +411,6 @@ export const tools: ToolMeta[] = [
     keywords: ["bmi calculator", "calorie calculator", "tdee calculator", "ideal weight calculator", "water intake calculator"],
     steps: ["Enter your height, weight, age and sex.", "Choose how active you are.", "See your BMI, calories, water and healthy weight range."],
     features: ["Metric and imperial", "BMR and TDEE (Mifflin-St Jeor)", "Healthy weight range for your height", "Calories to lose or gain"],
-    isNew: true,
     faqs: [
       { q: "Is BMI accurate?", a: "BMI is a quick screening number, not a diagnosis. It doesn't know muscle from fat, so athletes can read 'overweight'. Use it as a guide and talk to a doctor about your health." },
       { q: "Is my data stored?", a: "No. The numbers are worked out in your browser and are not saved or sent anywhere." },
@@ -434,7 +427,6 @@ export const tools: ToolMeta[] = [
     keywords: ["pomodoro timer", "focus timer", "study timer", "pomodoro online"],
     steps: ["Add what you are working on.", "Start a 25-minute focus session (or set your own length).", "Take the break when the bell rings — your sessions are logged."],
     features: ["Custom focus and break lengths", "Task list with pomodoro counts", "Sound + desktop notification", "Today's focus history"],
-    isNew: true,
     faqs: [
       { q: "Does the timer keep running if I switch tabs?", a: "Yes. It tracks the real end time, so it stays accurate even when the tab is in the background, and rings when the session ends." },
     ],
@@ -452,7 +444,6 @@ export const tools: ToolMeta[] = [
     keywords: ["split pdf", "extract pages from pdf", "separate pdf pages", "pdf splitter"],
     steps: ["Select a PDF.", "Click the pages you want, or type ranges like 1-3, 8.", "Download them as one PDF, or every page as its own file."],
     features: ["Visual page picker", "Ranges like 1-3, 5, 9-12", "One PDF or one file per page (ZIP)", "Quality untouched"],
-    isNew: true,
     faqs: [PRIVATE_FAQ, { q: "Does splitting reduce quality?", a: "No. Pages are copied exactly as they are — text stays selectable and images keep their resolution." }],
   },
   {
@@ -467,7 +458,6 @@ export const tools: ToolMeta[] = [
     keywords: ["compress pdf", "reduce pdf size", "pdf compressor", "make pdf smaller"],
     steps: ["Select the PDF you want to shrink.", "Pick Light (keeps text) or Strong (best for scans and photos).", "Compare the sizes and download."],
     features: ["Light mode keeps text selectable", "Strong mode for scans and photo PDFs", "See the saving before you download", "No 2-files-a-day limit"],
-    isNew: true,
     faqs: [
       PRIVATE_FAQ,
       { q: "Which mode should I use?", a: "Light rewrites the file more efficiently and keeps text and links — good for documents made on a computer. Strong turns each page into a compressed image — best for scanned documents and photo-heavy PDFs, but text is no longer selectable." },
@@ -486,7 +476,6 @@ export const tools: ToolMeta[] = [
     keywords: ["rotate pdf", "rotate pdf pages", "turn pdf page", "flip pdf"],
     steps: ["Select the PDF.", "Rotate all pages, or click single pages to turn them.", "Download the fixed PDF."],
     features: ["Rotate one page or all", "Live thumbnails", "Lossless — nothing re-compressed", "Saved permanently in the file"],
-    isNew: true,
     faqs: [PRIVATE_FAQ],
   },
   {
@@ -501,7 +490,6 @@ export const tools: ToolMeta[] = [
     keywords: ["pdf to jpg", "pdf to png", "pdf to image", "convert pdf to jpg"],
     steps: ["Select a PDF.", "Choose JPG or PNG and the quality (DPI).", "Download single pages or all of them as a ZIP."],
     features: ["JPG or PNG", "72, 150, 200 or 300 DPI", "Choose which pages", "ZIP download for all pages"],
-    isNew: true,
     faqs: [PRIVATE_FAQ, { q: "Which DPI should I pick?", a: "150 DPI is sharp on screens and small enough to share. Use 300 DPI for printing; 72 DPI for quick previews." }],
   },
   {
@@ -561,6 +549,18 @@ export const tools: ToolMeta[] = [
     ],
   },
 ];
+
+// Most-used first inside each category, the way iLovePDF and Smallpdf lay out their grids.
+const ORDER = [
+  "merge-pdf", "split-pdf", "compress-pdf", "pdf-to-word", "pdf-to-jpg", "jpg-to-pdf", "sign-pdf", "rotate-pdf",
+  "compress-image", "image-converter", "background-remover", "qr-code-generator", "color-palette-generator",
+  "word-counter", "case-converter", "text-cleaner", "remove-duplicate-lines", "markdown-editor", "lorem-ipsum-generator",
+  "invoice-generator", "resume-builder", "cover-letter-generator", "screen-recorder", "time-tracker",
+  "password-generator", "password-strength-checker", "unit-converter", "date-calculator", "bmi-calculator", "pomodoro-timer",
+];
+const rank = (slug: string) => (ORDER.includes(slug) ? ORDER.indexOf(slug) : ORDER.length);
+
+export const tools: ToolMeta[] = [...ALL].sort((a, b) => rank(a.slug) - rank(b.slug));
 
 export function getTool(slug: string) {
   return tools.find((t) => t.slug === slug);

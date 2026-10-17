@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   applicationName: SITE.name,
-  openGraph: { type: "website", siteName: SITE.name, images: ["/og.png"] },
+  openGraph: { type: "website", siteName: SITE.name, locale: "en_US" },
   twitter: { card: "summary_large_image" },
   icons: { icon: "/icon.png" },
   robots: { index: true, follow: true, "max-image-preview": "large" },
