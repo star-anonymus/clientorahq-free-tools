@@ -26,6 +26,16 @@ const TOOLS: Record<string, ComponentType> = {
   "password-generator": dynamic(() => import("@/tools/PasswordGenerator"), { ssr: false, loading: Loading }),
   "password-strength-checker": dynamic(() => import("@/tools/PasswordStrength"), { ssr: false, loading: Loading }),
   "unit-converter": dynamic(() => import("@/tools/UnitConverter"), { ssr: false, loading: Loading }),
+  "background-remover": dynamic(() => import("@/tools/BackgroundRemover"), { ssr: false, loading: Loading }),
+  "qr-code-generator": dynamic(() => import("@/tools/QrGenerator"), { ssr: false, loading: Loading }),
+  "color-palette-generator": dynamic(() => import("@/tools/ColorPalette"), { ssr: false, loading: Loading }),
+  "markdown-editor": dynamic(() => import("@/tools/MarkdownEditor"), { ssr: false, loading: Loading }),
+  "invoice-generator": dynamic(() => import("@/tools/InvoiceGenerator"), { ssr: false, loading: Loading }),
+  "resume-builder": dynamic(() => import("@/tools/ResumeBuilder"), { ssr: false, loading: Loading }),
+  "cover-letter-generator": dynamic(() => import("@/tools/CoverLetter"), { ssr: false, loading: Loading }),
+  "date-calculator": dynamic(() => import("@/tools/DateCalculator"), { ssr: false, loading: Loading }),
+  "bmi-calculator": dynamic(() => import("@/tools/BmiCalculator"), { ssr: false, loading: Loading }),
+  "pomodoro-timer": dynamic(() => import("@/tools/PomodoroTimer"), { ssr: false, loading: Loading }),
 };
 
 export default function ToolLoader({ slug }: { slug: string }) {
