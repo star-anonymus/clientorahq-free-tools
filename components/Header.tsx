@@ -25,6 +25,7 @@ export default function Header() {
   }, [open]);
 
   return (
+    <>
     <header className="sticky top-0 z-50 border-b border-line bg-bg/90 backdrop-blur-md">
       <div className="wrap flex h-[68px] items-center gap-4">
         <Logo />
@@ -87,9 +88,12 @@ export default function Header() {
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
+    </header>
 
+      {/* Outside the header on purpose: its backdrop-blur makes it the containing block for fixed children,
+          which squeezed this full-screen sheet into the 68px header (the mobile menu never showed). */}
       {open && (
-        <div className="fixed inset-x-0 bottom-0 top-[68px] overflow-y-auto border-t border-line bg-bg lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-[68px] z-40 overflow-y-auto border-t border-line bg-bg lg:hidden">
           <nav aria-label="All tools" className="wrap py-6">
             {categories.map((c) => (
               <div key={c.id} className="mb-6">
@@ -114,6 +118,6 @@ export default function Header() {
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }
