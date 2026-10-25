@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
     default: "Free Online PDF, Image & Text Tools — No Upload | ClientoraHQ",
-    template: "%s | ClientoraHQ Free Tools",
+    template: "%s | ClientoraHQ",
   },
   description: SITE.description,
   applicationName: SITE.name,

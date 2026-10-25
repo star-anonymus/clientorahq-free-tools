@@ -4,6 +4,9 @@ import ClientoraCta from "@/components/ClientoraCta";
 import JsonLd from "@/components/JsonLd";
 import { tools } from "@/lib/tools";
 import { SITE } from "@/lib/site";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default function Home() {
   return (
