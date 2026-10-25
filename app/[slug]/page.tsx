@@ -6,6 +6,7 @@ import ToolLoader from "@/components/ToolLoader";
 import ToolCard from "@/components/ToolCard";
 import ToolIcon from "@/components/ToolIcon";
 import ClientoraCta from "@/components/ClientoraCta";
+import OneCta from "@/components/OneCta";
 import JsonLd from "@/components/JsonLd";
 import { categories, getCategory, getTool, tools, toolsIn, type Category, type ToolMeta } from "@/lib/tools";
 import { SITE } from "@/lib/site";
@@ -193,6 +194,10 @@ function ToolPage({ tool }: { tool: ToolMeta }) {
       </section>
 
       <section className="wrap mt-16">
+        <OneCta slug={tool.slug} />
+      </section>
+
+      <section className="wrap mt-6">
         <ClientoraCta />
       </section>
 
