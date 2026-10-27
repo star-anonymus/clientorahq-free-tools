@@ -5,7 +5,7 @@ import { SITE } from "@/lib/site";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  const lastModified = new Date(SITE.updated);
   return [
     { url: SITE.url, lastModified, changeFrequency: "weekly", priority: 1 },
     ...categories.map((c) => ({ url: `${SITE.url}/${c.id}-tools`, lastModified, changeFrequency: "weekly" as const, priority: 0.8 })),

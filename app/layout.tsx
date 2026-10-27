@@ -12,7 +12,7 @@ const orbitron = Orbitron({ subsets: ["latin"], weight: ["700", "900"], variable
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: "Free Online PDF, Image & Text Tools — No Upload | ClientoraHQ",
+    default: "Free PDF, Image & Text Tools — No Upload | ClientoraHQ",
     template: "%s | ClientoraHQ",
   },
   description: SITE.description,

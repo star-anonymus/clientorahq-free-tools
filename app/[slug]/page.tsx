@@ -71,7 +71,8 @@ function Crumbs({ items }: { items: { name: string; href?: string }[] }) {
 
 function ToolPage({ tool }: { tool: ToolMeta }) {
   const cat = getCategory(tool.category);
-  const related = toolsIn(tool.category).filter((t) => t.slug !== tool.slug).slice(0, 4);
+  const picked = tool.related.map((s) => getTool(s)).filter((t): t is ToolMeta => !!t);
+  const related = picked.length ? picked : toolsIn(tool.category).filter((t) => t.slug !== tool.slug).slice(0, 4);
   const url = `${SITE.url}/${tool.slug}`;
 
   return (
@@ -119,7 +120,7 @@ function ToolPage({ tool }: { tool: ToolMeta }) {
           <span className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl border" style={{ color: cat.color, borderColor: `${cat.color}40`, background: `${cat.color}14` }}>
             <ToolIcon name={tool.icon} size={28} strokeWidth={1.8} />
           </span>
-          <h1 className="text-[clamp(30px,5vw,46px)] font-extrabold">{tool.name}</h1>
+          <h1 className="text-[clamp(30px,5vw,46px)] font-extrabold">{tool.h1}</h1>
           <p className="mx-auto mt-3 max-w-2xl text-[17px] text-fg-2">{tool.description.split(". ")[0]}.</p>
           <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-ok/30 bg-ok/10 px-3.5 py-1.5 text-[13.5px] font-semibold text-ok">
             <ShieldCheck size={16} aria-hidden="true" /> Your files never leave your device
@@ -204,8 +205,8 @@ function ToolPage({ tool }: { tool: ToolMeta }) {
       {related.length > 0 && (
         <section className="wrap mt-16">
           <div className="mb-5 flex items-end justify-between gap-4">
-            <h2 className="text-[26px] font-bold">More {cat.name.toLowerCase()} tools</h2>
-            <Link href={`/${cat.id}-tools`} className="text-[14.5px] font-semibold text-cyan hover:underline">See all</Link>
+            <h2 className="text-[26px] font-bold">Related free tools</h2>
+            <Link href={`/${cat.id}-tools`} className="text-[14.5px] font-semibold text-cyan hover:underline">All {cat.name.toLowerCase()} tools</Link>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {related.map((t) => <ToolCard key={t.slug} tool={t} />)}

@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import ToolCard from "@/components/ToolCard";
 import { tools } from "@/lib/tools";
+
+export const metadata: Metadata = {
+  title: "Page Not Found (404)",
+  description: "This page doesn't exist on ClientoraHQ Free Tools. Browse free PDF, image and text tools that run in your browser, with no sign-up and no upload.",
+  robots: { index: false, follow: true },
+};
 
 const POPULAR = ["merge-pdf", "compress-image", "sign-pdf", "background-remover"];
 

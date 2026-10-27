@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy",
-  description: "ClientoraHQ Free Tools process your files in your browser. Nothing is uploaded, stored or tracked by us.",
+  title: "Privacy Policy — Files Stay on Your Device",
+  description: "ClientoraHQ Free Tools process your files in your browser. Nothing is uploaded, stored or tracked by us. See what is kept on your device and why.",
   alternates: { canonical: "/privacy" },
 };
 
