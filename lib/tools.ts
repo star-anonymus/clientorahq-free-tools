@@ -26,6 +26,10 @@ export interface ToolMeta {
   name: string;
   /** Page H1: the target keyword, worded naturally. */
   h1: string;
+  /** Lead paragraph under the H1. Falls back to the first sentence of `description`. */
+  intro?: string;
+  /** Landing variants only: slug of the tool whose component this page reuses. */
+  component?: string;
   /** 2–4 hand-picked related tool slugs for internal links. */
   related: string[];
   /** One line for the card. */
@@ -98,21 +102,23 @@ const ALL: ToolMeta[] = [
   {
     slug: "pdf-to-word",
     name: "PDF to Word",
-    h1: "PDF to Word Converter, Free and No Signup",
-    related: ["pdf-to-jpg","text-cleaner","word-counter","compress-pdf"],
+    h1: "PDF to Word Converter Online Free — No Sign-up",
+    intro: "Turn a PDF into an editable Word file (.docx) for free. The conversion runs inside your browser, so your PDF stays on your device — no upload, no sign-up, no email.",
+    related: ["pdf-to-jpg","compress-pdf","merge-pdf","text-cleaner"],
     short: "Pull the text out of a PDF into an editable .docx file.",
     category: "pdf",
     icon: "file-type",
-    title: "PDF to Word Free, No Signup — Editable DOCX",
-    description: "Convert a PDF to an editable Word document (.docx) in your browser. Text and paragraphs are kept, page by page. Free, no sign-up, no email and no upload.",
+    title: "PDF to Word Free — No Sign-up, No Upload",
+    description: "Convert PDF to Word (.docx) online free. Your PDF stays on your device: it is converted in your browser, never uploaded. No sign-up, no email, no limits.",
     alternativeTo: "Adobe Acrobat",
-    keywords: ["pdf to word", "pdf to docx", "convert pdf to word free", "pdf to editable word"],
+    keywords: ["pdf to word converter online free", "pdf to word free", "pdf to word", "pdf to docx", "pdf to word no signup"],
     steps: ["Select the PDF you want to edit.", "Press Convert to Word — text is read page by page.", "Download the .docx and open it in Word or Google Docs."],
     features: ["Keeps paragraphs and headings", "Page markers between pages", "Several PDFs at once", "Opens in Word, Google Docs, LibreOffice"],
     faqs: [
       PRIVATE_FAQ,
       { q: "Will the layout look exactly like the PDF?", a: "The converter focuses on getting your text out cleanly into paragraphs you can edit. Complex layouts, tables and images are not rebuilt — for an exact visual copy use PDF to JPG instead." },
       { q: "Does it work with scanned PDFs?", a: "Scanned PDFs are pictures of text, so there is no text inside to extract. They need OCR, which this free tool does not do." },
+      { q: "Is this PDF to Word converter really free with no sign-up?", a: "Yes. There is no account, no email and no daily limit. Because the work happens in your own browser, it costs us nothing to run, so there is nothing to charge for." },
     ],
   },
   // ───────────────────────── Image
@@ -316,15 +322,16 @@ const ALL: ToolMeta[] = [
   {
     slug: "background-remover",
     name: "Background Remover",
-    h1: "Free Background Remover, No Signup",
-    related: ["compress-image","image-converter","color-palette-generator"],
+    h1: "Free Background Remover Online — HD, No Sign-up",
+    intro: "Remove the background from any image for free and download it at full resolution: a transparent PNG, or a white background for product photos. The AI runs in your browser, so your photo is never uploaded.",
+    related: ["compress-image","image-converter","sign-pdf","qr-code-generator"],
     short: "Cut out the background of any photo — transparent PNG.",
     category: "image",
     icon: "wand",
-    title: "Free Background Remover — No Signup, No Upload",
-    description: "Remove the background from any photo free with AI that runs in your browser. Download a transparent PNG or a white background. No sign-up, no upload.",
+    title: "Background Remover Online Free — HD PNG",
+    description: "Remove the background from any image online free. AI runs in your browser and gives a full-resolution transparent PNG or white background. No sign-up.",
     alternativeTo: "remove.bg",
-    keywords: ["remove background", "background remover", "transparent background", "remove bg free"],
+    keywords: ["background remover online free", "background remover hd", "background remover image", "remove background", "transparent background"],
     steps: ["Select a photo of a person, product or animal.", "Wait a few seconds while the AI model cuts it out on your device.", "Download a transparent PNG, or pick a background colour first."],
     features: ["Full-resolution PNG, free", "Transparent, white or any colour", "AI runs on your device", "No credits, no watermark"],
     isNew: true,
@@ -333,6 +340,8 @@ const ALL: ToolMeta[] = [
       { q: "Why is the first run slow?", a: "The first time, your browser downloads the AI model. After that it is cached, so the next photos are much faster." },
       { q: "What photos work best?", a: "A clear subject — a person, product, pet or car — against a background that contrasts with it. Fine hair and glass are the hardest parts for any background remover." },
       { q: "Can I put a product photo on a white background?", a: "Yes. After the cut-out, choose White as the background and download. That gives the clean look marketplaces and online shops ask for, at full resolution and with no watermark." },
+      { q: "Is the result HD, or is it shrunk?", a: "The PNG you download has the same width and height as the photo you put in, so an HD or phone-camera photo stays HD. There is no paid 'HD' tier and no watermark." },
+      { q: "Can I remove the background from my signature?", a: "This tool is built for photos of people, products and animals. If you want to put your signature on a document, use Sign PDF: upload a photo of your signature on white paper and the paper is made transparent for you, then place it on the PDF." },
     ],
   },
   {
@@ -397,15 +406,16 @@ const ALL: ToolMeta[] = [
   {
     slug: "invoice-generator",
     name: "Invoice Generator",
-    h1: "Free Invoice Generator for Pakistan and Freelancers",
+    h1: "Free Invoice Generator for Pakistan (PKR)",
+    intro: "Make an invoice in Pakistani rupees in a couple of minutes: add your logo, line items, tax and bank details, then download a clean PDF to send on WhatsApp or email. Free, no sign-up, no watermark.",
     related: ["time-tracker","sign-pdf","merge-pdf","compress-pdf"],
     short: "Professional PDF invoices for freelancers — any currency, no watermark.",
     category: "business",
     icon: "receipt",
-    title: "Free Invoice Generator Pakistan — PKR, PDF",
-    description: "Make a professional invoice in PKR or 30+ currencies: client, line items, tax and discount. Download a clean PDF with no watermark. Free, no sign-up.",
+    title: "Free Invoice Generator (PKR) — Pakistan",
+    description: "Free invoice maker for Pakistan: bill in PKR (Rs) or 30+ currencies, add tax, discount and your logo, then download a PDF. No sign-up, no watermark.",
     alternativeTo: "FreshBooks",
-    keywords: ["invoice generator", "free invoice maker", "freelance invoice template", "invoice pdf"],
+    keywords: ["invoice generator pkr", "invoice generator free pkr", "invoice maker pkr", "invoice generator pakistan", "invoice maker free", "invoice pdf"],
     steps: ["Fill in your details, your client and the invoice number.", "Add line items, tax and any discount.", "Download the PDF and send it to your client."],
     features: ["30+ currencies", "Tax, discount, notes and bank details", "Clean PDF, no watermark", "Your details remembered on this device"],
     faqs: [
@@ -413,46 +423,53 @@ const ALL: ToolMeta[] = [
       { q: "Can I write the invoice in Urdu, Arabic or Hindi?", a: "Not yet. The PDF uses a standard built-in font that covers English and other Latin-alphabet languages, which keeps the tool fast and fully offline. Currency symbols the font cannot draw, such as the rupee sign, are written as the code instead (INR, PKR)." },
       { q: "Do you keep a copy of my invoices?", a: "No. Your business details and the last invoice are saved only in your own browser so you don't retype them. We never see them." },
       { q: "Can I make an invoice in Pakistani rupees?", a: "Yes. Pick PKR in the currency list and amounts are shown with Rs. Add your NTN or sales-tax number in your details if the client needs it, then download the PDF and send it on email or WhatsApp." },
+      { q: "Do I need to sign up to use the invoice maker?", a: "No. There is no account and no email. Open the page, fill in the invoice and download the PDF. Your own details are remembered in this browser so the next invoice is quicker." },
     ],
   },
   {
     slug: "resume-builder",
     name: "Resume Builder",
-    h1: "Free Resume Builder and CV Maker for Pakistan",
-    related: ["cover-letter-generator","compress-pdf","jpg-to-pdf","background-remover"],
+    h1: "Free Resume Builder Online, No Sign-up",
+    intro: "Build an ATS-friendly resume online for free: fill in a simple form, use bullet ideas written for your role, pick a template and download a PDF. No sign-up, and your details stay on your device.",
+    related: ["cv-maker","cover-letter-generator","compress-pdf","jpg-to-pdf"],
     short: "Fill in a form, pick a template, download a clean PDF resume.",
     category: "business",
     icon: "file-user",
-    title: "Free Resume Builder Pakistan — CV Maker, PDF",
-    description: "Make a clean, ATS-friendly CV for jobs in Pakistan or abroad. Fill a simple form, use bullet ideas, pick a template and download a PDF. Free, no account.",
+    title: "Resume Builder Free Online — PDF, No Sign-up",
+    description: "Build an ATS-friendly resume online free. Fill a simple form, use bullet ideas by role, pick a template and download a PDF. No sign-up, saved on your device.",
     alternativeTo: "Zety",
-    keywords: ["resume builder", "free resume builder", "cv maker", "ats resume template", "resume pdf"],
+    keywords: ["resume builder free", "resume builder online free", "free resume builder", "ats resume template", "resume pdf"],
     steps: ["Fill in your details, experience, education and skills.", "Use the bullet ideas to describe your work with results.", "Pick a template and download your PDF."],
     features: ["ATS-friendly single column", "Bullet-point ideas by role", "Two clean templates", "Saved on your device, no account"],
     faqs: [
       { q: "Is the resume ATS-friendly?", a: "Yes. The PDF uses real, selectable text in one column with standard headings (Experience, Education, Skills), which is what applicant tracking systems read best." },
       { q: "Does it use AI to write my resume?", a: "No — and that keeps it free and private. Instead you get proven bullet templates by role (action verb + task + result) that you fill in with your own numbers." },
-      { q: "What CV format works for jobs in Pakistan?", a: "One or two pages: name, phone with +92, email and city at the top, a short summary, experience with results, education with degree, institute and year, then skills. Both templates follow this order and export as a text-based PDF that job portals accept." },
+      { q: "Is this resume builder really free?", a: "Yes. There is no sign-up, no trial and no paywall on the download. The PDF has no watermark, and you can make as many versions as you like." },
+      { q: "Resume or CV — which one do I need?", a: "In the US and Canada a resume is a short, one- to two-page summary, while a CV can be longer. In Pakistan, the UK and the Gulf, people usually say CV for the same short document. This builder makes that one- to two-page version; see the CV Maker page for a Pakistan-style CV guide." },
       { q: "My job portal has a file size limit. What do I do?", a: "The PDF is usually well under 200KB because it is plain text. If you merge it with certificates or scans and the file grows, use Compress PDF to bring it back under the limit." },
     ],
   },
   {
     slug: "cover-letter-generator",
     name: "Cover Letter Generator",
-    h1: "Free Cover Letter Generator",
-    related: ["resume-builder","compress-pdf","word-counter"],
+    h1: "Free Cover Letter Generator, No Sign-up",
+    intro: "Write a cover letter for a job or internship in minutes: enter the job title, company and your best results, pick a tone, then edit it and download a PDF. Free, with no sign-up.",
+    related: ["cv-maker","resume-builder","compress-pdf","word-counter"],
     short: "A tailored cover letter from the job, company and your strengths.",
     category: "business",
     icon: "mail",
-    title: "Cover Letter Generator Free — Job & Internship",
-    description: "Write a tailored cover letter in minutes. Enter the job, company and your top strengths, pick a tone, then edit and download. For jobs and internships.",
-    keywords: ["cover letter generator", "free cover letter", "cover letter template", "cover letter for freelancers"],
+    title: "Cover Letter Generator Free — No Sign-up",
+    description: "Write a cover letter free with no sign-up: enter the job title, company and your best results, pick a tone, edit and download a PDF. Jobs and internships.",
+    keywords: ["cover letter generator free", "cover letter generator free no sign up", "cover letter generator", "cover letter template", "internship cover letter"],
     steps: ["Enter the job title, company and hiring manager.", "Add your experience and two or three strengths with results.", "Pick a tone, edit the letter, then copy or download it."],
     features: ["Formal, friendly or confident tone", "Job, freelance-proposal and internship styles", "Edit before you download", "PDF or text"],
     faqs: [
       { q: "Is this written by AI?", a: "No. It assembles a proven structure — hook, proof, fit, call to action — from what you type. It is instant, free and private, and you should still read it and make it sound like you." },
       { q: "Can I write a cover letter for an internship or a first job?", a: "Yes. Pick Internship as the letter type. It leans on your studies, projects and eagerness to learn instead of years of experience, which suits students and fresh graduates in Pakistan and elsewhere." },
       { q: "How long should a cover letter be?", a: "Three to four short paragraphs, around 250 to 350 words, fits on one page. Recruiters skim, so lead with your strongest result and keep the rest tight." },
+      { q: "Can I make a cover letter from the job description?", a: "There is no box to paste the whole ad. Read the job description, then type the job title and company, and in 'Why this company' and your wins use the one or two requirements you match best, in the ad's own words. That tailors the letter to the job." },
+      { q: "Can I make a cover letter from my resume or CV?", a: "Yes, by hand: copy your two or three strongest results from your CV into the Win fields and your years of experience into the form. If you don't have a CV yet, make one first with the free CV Maker." },
+      { q: "Do I need to sign up?", a: "No. There is no account and no email. What you type is kept only in this browser so you can come back and change it." },
     ],
   },
   {
@@ -666,8 +683,43 @@ const rank = (slug: string) => (ORDER.includes(slug) ? ORDER.indexOf(slug) : ORD
 
 export const tools: ToolMeta[] = [...ALL].sort((a, b) => rank(a.slug) - rank(b.slug));
 
+/**
+ * Landing variants: their own URL, copy and FAQ for a distinct search intent, reusing an existing
+ * tool's component (`component`). Kept out of `tools` so the home grid, menus and category pages
+ * don't show the same tool twice; they are reached through related links and the sitemap.
+ */
+export const landings: ToolMeta[] = [
+  {
+    slug: "cv-maker",
+    component: "resume-builder",
+    name: "CV Maker",
+    h1: "Free CV Maker Online — Download Your CV as PDF",
+    intro: "Make your CV online for free and download it as a PDF, ready for jobs in Pakistan or abroad. Fill in a simple form, pick a template and you're done — no sign-up, and your details stay on your device.",
+    related: ["cover-letter-generator","background-remover","compress-pdf","jpg-to-pdf"],
+    short: "Make a CV for jobs in Pakistan or abroad and download a PDF.",
+    category: "business",
+    icon: "file-user",
+    title: "Free CV Maker — Download PDF, No Sign-up",
+    description: "Make your CV online free for jobs in Pakistan or abroad. Fill a simple form, pick a template and download your CV as a PDF. No sign-up, no watermark.",
+    keywords: ["cv maker", "cv maker free", "cv maker online free", "cv maker free download pdf", "cv format pakistan"],
+    steps: ["Fill in your name, phone, city, experience, education and skills.", "Use the bullet ideas to show results, not just duties.", "Pick the Modern or Classic template and download your CV as a PDF."],
+    features: ["Free CV download as PDF", "No sign-up, no watermark", "Modern and Classic templates", "Text-based PDF that job portals read"],
+    faqs: [
+      { q: "Can I download my CV as a PDF for free?", a: "Yes. Press Download PDF and the file is made in your browser and saved straight to your device. There is no sign-up, no payment step and no watermark on the CV." },
+      { q: "What CV format works for jobs in Pakistan?", a: "One or two pages: name, phone with +92, email and city at the top, a short summary, experience with results, education with degree, institute and year, then skills. Both templates follow this order and export as a text-based PDF that job portals accept." },
+      { q: "Is this an AI CV maker?", a: "No. It does not send your details to an AI service, which keeps it free and private. Instead it gives you proven bullet ideas by role (action verb + task + result) that you fill in with your own numbers." },
+      { q: "Can I add a photo to my CV?", a: "The templates don't include a photo, which suits most job portals and applicant tracking systems. If an employer asks for a photo separately, use the Background Remover to put your photo on a plain white background." },
+      { q: "Is my CV saved anywhere?", a: "Only in this browser on your device, so you can come back and update it. Nothing is uploaded to a server. Clearing your browser data removes it." },
+      { q: "My job portal has a file size limit. What do I do?", a: "The PDF is usually well under 200KB because it is plain text. If you merge it with your degree and certificates and the file grows, use Compress PDF to bring it under the limit." },
+    ],
+  },
+];
+
+/** Every page with a tool on it: the main tools plus landing variants. */
+export const toolPages: ToolMeta[] = [...tools, ...landings];
+
 export function getTool(slug: string) {
-  return tools.find((t) => t.slug === slug);
+  return toolPages.find((t) => t.slug === slug);
 }
 
 export function getCategory(id: CategoryId) {

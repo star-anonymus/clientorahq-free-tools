@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { categories, toolsIn } from "@/lib/tools";
+import { categories, landings, toolsIn } from "@/lib/tools";
 import { SITE } from "@/lib/site";
 import { Mark } from "./Logo";
 
@@ -26,7 +26,7 @@ export default function Footer() {
                 {c.name}
               </Link>
               <ul className="space-y-1.5">
-                {toolsIn(c.id).map((t) => (
+                {[...toolsIn(c.id), ...landings.filter((l) => l.category === c.id)].map((t) => (
                   <li key={t.slug}>
                     <Link href={`/${t.slug}`} className="hover:text-cyan">{t.name}</Link>
                   </li>

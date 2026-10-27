@@ -32,6 +32,8 @@ npm start            # serve ./out on http://localhost:4821
 
 The page, sitemap entry, structured data and nav links appear automatically.
 
+A **landing variant** (e.g. `/cv-maker`, which reuses the Resume Builder) goes in `landings` in `lib/tools.ts` with `component` set to the tool slug it reuses. It gets its own page, canonical, FAQ, sitemap entry and footer link, but no duplicate card in the grid. Only add one for a genuinely different search intent.
+
 ## Decisions
 
 - **No AI calls.** "AI" tools that would need a paid model are template-based instead: Resume Builder (bullet templates by role) and Cover Letter Generator (structured templates, three tones). The **AI Grammar Checker** from the old roadmap is left out: a grammar checker worth using needs a language model or a server (LanguageTool), and either one costs money per request.

@@ -8,13 +8,13 @@ import ToolIcon from "@/components/ToolIcon";
 import ClientoraCta from "@/components/ClientoraCta";
 import OneCta from "@/components/OneCta";
 import JsonLd from "@/components/JsonLd";
-import { categories, getCategory, getTool, tools, toolsIn, type Category, type ToolMeta } from "@/lib/tools";
+import { categories, getCategory, getTool, toolPages, toolsIn, type Category, type ToolMeta } from "@/lib/tools";
 import { SITE } from "@/lib/site";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return [...tools.map((t) => ({ slug: t.slug })), ...categories.map((c) => ({ slug: `${c.id}-tools` }))];
+  return [...toolPages.map((t) => ({ slug: t.slug })), ...categories.map((c) => ({ slug: `${c.id}-tools` }))];
 }
 
 function categoryFromSlug(slug: string) {
@@ -121,7 +121,7 @@ function ToolPage({ tool }: { tool: ToolMeta }) {
             <ToolIcon name={tool.icon} size={28} strokeWidth={1.8} />
           </span>
           <h1 className="text-[clamp(30px,5vw,46px)] font-extrabold">{tool.h1}</h1>
-          <p className="mx-auto mt-3 max-w-2xl text-[17px] text-fg-2">{tool.description.split(". ")[0]}.</p>
+          <p className="mx-auto mt-3 max-w-2xl text-[17px] text-fg-2">{tool.intro ?? `${tool.description.split(". ")[0]}.`}</p>
           <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-ok/30 bg-ok/10 px-3.5 py-1.5 text-[13.5px] font-semibold text-ok">
             <ShieldCheck size={16} aria-hidden="true" /> Your files never leave your device
           </p>
@@ -130,7 +130,7 @@ function ToolPage({ tool }: { tool: ToolMeta }) {
 
       <section className="wrap mt-8" aria-label={tool.name}>
         <div className="panel mx-auto max-w-5xl p-4 sm:p-6">
-          <ToolLoader slug={tool.slug} />
+          <ToolLoader slug={tool.component ?? tool.slug} />
         </div>
       </section>
 
@@ -195,7 +195,7 @@ function ToolPage({ tool }: { tool: ToolMeta }) {
       </section>
 
       <section className="wrap mt-16">
-        <OneCta slug={tool.slug} />
+        <OneCta slug={tool.component ?? tool.slug} />
       </section>
 
       <section className="wrap mt-6">
