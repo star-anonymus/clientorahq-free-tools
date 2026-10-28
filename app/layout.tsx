@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Orbitron } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FamilyPromo from "@/components/FamilyPromo";
 import Toaster from "@/components/ui/Toaster";
 import { SITE } from "@/lib/site";
 import "./globals.css";
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <Header />
         <main id="main">{children}</main>
+        <FamilyPromo />
         <Footer />
         <Toaster />
       </body>
