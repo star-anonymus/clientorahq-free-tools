@@ -12,6 +12,14 @@ const CARDS = [
     alt: "ClientoraHQ One: a phone showing a bio-link store with products, prices, a booking button and Order on WhatsApp",
   },
   {
+    name: "Kahanio",
+    text: "Free AI reel maker: type a topic, get a short video with captions, voice, music and real footage. English, Urdu and Hindi.",
+    cta: "Make a free reel",
+    href: "https://kahanio.clientorahq.com/?utm_source=tools&utm_medium=crosspromo",
+    img: "/ads/ad-kahanio-wide.webp",
+    alt: "Kahanio: a cartoon presenter says Assalam o Alaikum from a speech bubble; free AI reel maker, topic in, short video out",
+  },
+  {
     name: "ClientoraHQ",
     text: "Find clients who are asking for your service on LinkedIn, Instagram and Google Maps. Free plan in your browser.",
     cta: "Start free",
@@ -26,7 +34,7 @@ export default function FamilyPromo() {
     <section className="wrap mt-20" aria-labelledby="family-promo-title">
       <p className="hud-label">From the ClientoraHQ family</p>
       <h2 id="family-promo-title" className="mt-3 text-[26px] font-bold">More from ClientoraHQ</h2>
-      <div className="mt-5 grid gap-4 sm:gap-6 md:grid-cols-2">
+      <div className="mt-5 grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
         {CARDS.map((c) => (
           <article key={c.name} className="panel flex min-w-0 flex-col overflow-hidden">
             {/* Static export: images are unoptimized, so a plain sized <img> is what ships either way. */}
