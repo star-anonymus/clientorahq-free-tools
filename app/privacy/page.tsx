@@ -26,6 +26,11 @@ export default function Privacy() {
           the first time you use it. Your photo is still processed on your device.
         </p>
         <p>
+          The one time a file does leave your device is when you choose it: in the Screen Recorder, pressing &quot;Get share link&quot; uploads
+          that one video so others can watch it from the link. It is kept for 30 days and then deleted, and you can delete it sooner. If you
+          never press the button, your recording stays on your device like every other file.
+        </p>
+        <p>
           After you use a tool we ask how it went. When you answer or skip, we save the tool&apos;s name, this page&apos;s address, your
           star rating and the comment you typed, and nothing else: no name, no email and never your file. Please don&apos;t put personal
           details in the comment.
