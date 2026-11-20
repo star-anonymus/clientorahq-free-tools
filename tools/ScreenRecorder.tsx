@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Circle, Download, Mic, MonitorUp, Pause, Play, Square, Video, Volume2, RotateCcw } from "lucide-react";
+import { Circle, Copy, Download, ExternalLink, Link2, Mic, MonitorUp, Pause, Play, Square, Trash2, Video, Volume2, RotateCcw } from "lucide-react";
 import { formatBytes, downloadBlob } from "@/lib/files";
 import { toast } from "@/lib/toast";
 
@@ -15,6 +15,102 @@ const clock = (ms: number) => {
   const s = Math.floor(ms / 1000);
   return `${Math.floor(s / 3600) ? `${Math.floor(s / 3600)}:` : ""}${String(Math.floor(s / 60) % 60).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 };
+
+// Loom-style share links: share-worker/ (Cloudflare Worker + R2) stores the video for 30 days.
+const SHARE_URL = (process.env.NEXT_PUBLIC_SHARE_URL || "https://share.clientorahq.com").replace(/\/$/, "");
+
+async function api<T>(path: string, init: RequestInit): Promise<T> {
+  let r: Response;
+  try { r = await fetch(SHARE_URL + path, init); } catch { throw new Error("Could not reach the share server. Check your internet and press Retry."); }
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error((data as { error?: string }).error || `The share server answered ${r.status}. Press Retry.`);
+  return data as T;
+}
+
+type Shared = { id: string; url: string; deleteKey: string };
+
+function ShareBox({ blob }: { blob: Blob }) {
+  const [step, setStep] = useState<"ask" | "uploading" | "done" | "error" | "deleted">("ask");
+  const [pct, setPct] = useState(0);
+  const [err, setErr] = useState("");
+  const [shared, setShared] = useState<Shared | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const upload = async () => {
+    setStep("uploading"); setPct(0); setErr("");
+    try {
+      const s = await api<{ id: string; uploadId: string; partSize: number; deleteKey: string }>("/upload/start", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: blob.type, size: blob.size }),
+      });
+      const parts: { n: number; etag: string }[] = [];
+      const total = Math.ceil(blob.size / s.partSize);
+      for (let i = 0; i < total; i++) {
+        const piece = blob.slice(i * s.partSize, (i + 1) * s.partSize);
+        let last: unknown;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            const r = await api<{ etag: string }>(`/upload/${s.id}/${i + 1}?u=${encodeURIComponent(s.uploadId)}`, { method: "PUT", body: piece });
+            parts.push({ n: i + 1, etag: r.etag }); last = null; break;
+          } catch (e) { last = e; await new Promise((res) => setTimeout(res, 1500 * (attempt + 1))); }
+        }
+        if (last) throw last;
+        setPct(Math.round(((i + 1) / total) * 100));
+      }
+      const done = await api<{ url: string }>(`/upload/${s.id}/done?u=${encodeURIComponent(s.uploadId)}`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ parts }),
+      });
+      const sh = { id: s.id, url: done.url, deleteKey: s.deleteKey };
+      setShared(sh);
+      try { const all = JSON.parse(localStorage.getItem("chq-shares") || "{}"); all[s.id] = s.deleteKey; localStorage.setItem("chq-shares", JSON.stringify(all)); } catch { /* the delete button still works on this page */ }
+      setStep("done");
+    } catch (e) { setErr((e as Error).message || "Upload failed. Press Retry."); setStep("error"); }
+  };
+
+  const remove = async () => {
+    if (!shared) return;
+    try {
+      const r = await fetch(`${SHARE_URL}/v/${shared.id}`, { method: "DELETE", headers: { "X-Delete-Key": shared.deleteKey } });
+      if (!r.ok && r.status !== 204) throw new Error();
+      setStep("deleted");
+    } catch { toast.error("Could not delete the link. Check your internet and try again."); }
+  };
+
+  const copy = () => navigator.clipboard.writeText(shared!.url).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }, () => toast.error("Copy failed: select the link and copy it."));
+
+  return (
+    <div className="mx-auto max-w-xl rounded-2xl border border-line bg-bg-2/40 p-5 text-center">
+      {step === "ask" && (<>
+        <p className="text-[16px] font-bold"><Link2 size={18} className="mr-1 inline" aria-hidden="true" /> Share it like a Loom video</p>
+        <p className="mt-1 text-[13.5px] text-fg-2">This uploads the video ({formatBytes(blob.size)}) to ClientoraHQ's share server. Anyone with the link can watch it for 30 days, then it is deleted. Up to 1 GB.</p>
+        <button type="button" className="btn btn-primary mt-3" onClick={upload}><Link2 size={18} /> Get share link</button>
+      </>)}
+      {step === "uploading" && (<>
+        <p className="font-bold">Uploading… {pct}%</p>
+        <div className="mt-3 h-2 overflow-hidden rounded-full bg-line" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><div className="h-full bg-cyan transition-all" style={{ width: `${pct}%` }} /></div>
+        <p className="mt-2 text-[13px] text-fg-3">Keep this tab open until it finishes.</p>
+      </>)}
+      {step === "error" && (<>
+        <p className="font-bold text-bad">Share link not made</p>
+        <p className="mt-1 text-[14px] text-fg-2">{err}</p>
+        <button type="button" className="btn btn-primary mt-3" onClick={upload}><RotateCcw size={16} /> Retry</button>
+      </>)}
+      {step === "done" && shared && (<>
+        <p className="font-bold text-ok">Your share link is ready</p>
+        <div className="mt-3 flex gap-2">
+          <input readOnly value={shared.url} onFocus={(e) => e.currentTarget.select()} className="input min-w-0 flex-1" aria-label="Share link" />
+          <button type="button" className="btn btn-primary" onClick={copy}><Copy size={16} /> {copied ? "Copied" : "Copy"}</button>
+        </div>
+        <div className="mt-3 flex flex-wrap justify-center gap-3 text-[14px]">
+          <a className="btn btn-ghost" href={shared.url} target="_blank" rel="noopener"><ExternalLink size={16} /> Open</a>
+          <a className="btn btn-ghost" href={`https://wa.me/?text=${encodeURIComponent(shared.url)}`} target="_blank" rel="noopener">Send on WhatsApp</a>
+          <button type="button" className="btn btn-ghost" onClick={remove}><Trash2 size={16} /> Delete link</button>
+        </div>
+        <p className="mt-2 text-[12.5px] text-fg-3">Works for 30 days. Only people you send it to can find it.</p>
+      </>)}
+      {step === "deleted" && <p className="font-bold">The link was deleted. Nobody can watch the video any more.</p>}
+    </div>
+  );
+}
 
 export default function ScreenRecorder() {
   const [supported, setSupported] = useState(true);
@@ -162,6 +258,7 @@ export default function ScreenRecorder() {
           <button type="button" className="btn btn-ghost" onClick={() => { URL.revokeObjectURL(result.url); setResult(null); setState("idle"); }}><RotateCcw size={16} /> New recording</button>
         </div>
         {result.ext === "webm" && <p className="text-center text-[13px] text-fg-3">WebM plays in Chrome, Edge, Firefox and VLC, and uploads straight to YouTube and Google Drive.</p>}
+        <ShareBox blob={result.blob} />
       </div>
     );
   }
@@ -208,7 +305,7 @@ export default function ScreenRecorder() {
           <button type="button" className="btn btn-primary btn-lg w-full" onClick={start}>
             <span className="h-3.5 w-3.5 rounded-full bg-bad" aria-hidden="true" /> Start recording
           </button>
-          <p className="text-center text-[13px] text-fg-3">No time limit · no watermark · the video never leaves your computer</p>
+          <p className="text-center text-[13px] text-fg-3">No time limit · no watermark · the video stays on your computer unless you make a share link</p>
         </>
       )}
     </div>
