@@ -31,6 +31,7 @@ export default function ScreenRecorder() {
   const streams = useRef<MediaStream[]>([]);
   const chunks = useRef<Blob[]>([]);
   const audioCtx = useRef<AudioContext | null>(null);
+  const mixNodes = useRef<AudioNode[]>([]);
   const camVideo = useRef<HTMLVideoElement>(null);
   const timing = useRef({ start: 0, pausedAt: 0, pausedTotal: 0 });
 
@@ -48,35 +49,46 @@ export default function ScreenRecorder() {
   function cleanup() {
     streams.current.forEach((s) => s.getTracks().forEach((t) => t.stop()));
     streams.current = [];
+    mixNodes.current = [];
     audioCtx.current?.close().catch(() => {});
     audioCtx.current = null;
     if (document.pictureInPictureElement) document.exitPictureInPicture().catch(() => {});
   }
 
   const start = async () => {
+    // The audio mixer is made here, while the click still counts as a user action. Made later (after the
+    // share box), browsers create it "suspended" and the recording's sound comes out silent.
+    const ctx = typeof AudioContext !== "undefined" ? new AudioContext() : null;
+    audioCtx.current = ctx;
+    ctx?.resume().catch(() => {});
     try {
+      // Ask for the microphone first: the permission prompt then shows before the share box, not hidden behind it.
+      let micStream: MediaStream | null = null;
+      if (mic) {
+        try {
+          micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+          streams.current.push(micStream);
+        } catch {
+          toast.error("Microphone is blocked. Click the lock icon next to the address bar, allow the microphone, then try again. Recording without it.");
+        }
+      }
+
       const display = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: sysAudio });
       streams.current.push(display);
       const tracks: MediaStreamTrack[] = [...display.getVideoTracks()];
 
-      // Mix microphone and system/tab sound into one track.
+      // Mix microphone and system/tab sound into one track, always through the mixer so both are kept.
       const sources: MediaStream[] = [];
       if (display.getAudioTracks().length) sources.push(new MediaStream(display.getAudioTracks()));
-      if (mic) {
-        try {
-          const m = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-          streams.current.push(m);
-          sources.push(m);
-        } catch { toast.info("Microphone blocked — recording without it."); }
-      }
-      if (sources.length === 1) tracks.push(...sources[0].getAudioTracks());
-      else if (sources.length > 1) {
-        const ctx = new AudioContext();
-        audioCtx.current = ctx;
+      if (micStream) sources.push(micStream);
+      if (sources.length && ctx) {
+        if (ctx.state !== "running") await ctx.resume().catch(() => {});
         const dest = ctx.createMediaStreamDestination();
-        sources.forEach((s) => ctx.createMediaStreamSource(s).connect(dest));
-        tracks.push(...dest.stream.getAudioTracks());
-      }
+        // Kept on the ref so the browser does not garbage-collect the nodes mid-recording.
+        mixNodes.current = sources.map((s) => { const n = ctx.createMediaStreamSource(s); n.connect(dest); return n; });
+        tracks.push(...(ctx.state === "running" ? dest.stream.getAudioTracks() : sources.flatMap((s) => s.getAudioTracks()).slice(0, 1)));
+      } else if (sources.length) tracks.push(...sources[0].getAudioTracks());
+      if (mic && !micStream && !display.getAudioTracks().length) toast.info("This recording has no sound.");
 
       if (cam && camVideo.current) {
         try {
