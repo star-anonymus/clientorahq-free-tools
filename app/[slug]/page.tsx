@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, ShieldCheck, Check, WifiOff, Infinity as InfinityIcon, UserX } from "lucide-react";
 import ToolLoader from "@/components/ToolLoader";
+import FeedbackHost from "@/components/FeedbackHost";
 import ToolCard from "@/components/ToolCard";
 import ToolIcon from "@/components/ToolIcon";
 import ClientoraCta from "@/components/ClientoraCta";
@@ -130,7 +131,9 @@ function ToolPage({ tool }: { tool: ToolMeta }) {
 
       <section className="wrap mt-8" aria-label={tool.name}>
         <div className="panel mx-auto max-w-5xl p-4 sm:p-6">
-          <ToolLoader slug={tool.component ?? tool.slug} />
+          <FeedbackHost tool={tool.slug} name={tool.name}>
+            <ToolLoader slug={tool.component ?? tool.slug} />
+          </FeedbackHost>
         </div>
       </section>
 

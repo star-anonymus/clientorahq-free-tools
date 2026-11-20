@@ -26,6 +26,11 @@ export default function Privacy() {
           the first time you use it. Your photo is still processed on your device.
         </p>
         <p>
+          After you use a tool we ask how it went. When you answer or skip, we save the tool&apos;s name, this page&apos;s address, your
+          star rating and the comment you typed, and nothing else: no name, no email and never your file. Please don&apos;t put personal
+          details in the comment.
+        </p>
+        <p>
           Questions? Write to <a className="text-cyan hover:underline" href="mailto:support@clientorahq.com">support@clientorahq.com</a>.
         </p>
       </div>

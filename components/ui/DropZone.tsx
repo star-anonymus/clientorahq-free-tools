@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import { Upload, ShieldCheck } from "lucide-react";
 import { toast } from "@/lib/toast";
+import { gate } from "@/lib/feedback";
 
 interface Props {
   /** input accept string, e.g. "application/pdf,.pdf" */
@@ -31,7 +32,8 @@ export default function DropZone({ accept, multiple = true, onFiles, label, hint
       files = ok;
     }
     if (!multiple) files = files.slice(0, 1);
-    if (files.length) onFiles(files);
+    // A new file is a new use: an unanswered feedback question comes first, then the files go through
+    if (files.length) gate(() => onFiles(files));
   };
 
   if (compact) {

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { ArrowDown, ArrowUp, CheckCircle2, Copy, Check, FileText, RotateCcw, X } from "lucide-react";
 import { copyText } from "@/lib/files";
+import { gate } from "@/lib/feedback";
 import { toast } from "@/lib/toast";
 
 /** One row in a file queue: thumb, name, meta, reorder + remove — never drag-only. */
@@ -76,7 +77,7 @@ export function ResultPanel({ title, detail, onDownload, downloadLabel, onReset,
         </button>
       )}
       {children}
-      <button type="button" className="btn btn-ghost btn-sm" onClick={onReset}>
+      <button type="button" className="btn btn-ghost btn-sm" onClick={() => gate(onReset)}>
         <RotateCcw size={15} /> Start over
       </button>
     </div>

@@ -1,3 +1,5 @@
+import { markUsed } from "./feedback";
+
 export function formatBytes(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -18,6 +20,7 @@ export function downloadBlob(blob: Blob, filename: string) {
   a.remove();
   // Give the browser time to start the download before freeing the URL.
   setTimeout(() => URL.revokeObjectURL(url), 30_000);
+  markUsed();
 }
 
 export function downloadText(text: string, filename: string, type = "text/plain") {
@@ -58,6 +61,7 @@ export async function zipFiles(files: { name: string; blob: Blob }[]): Promise<B
 export async function copyText(text: string) {
   try {
     await navigator.clipboard.writeText(text);
+    markUsed();
     return true;
   } catch {
     const ta = document.createElement("textarea");
@@ -66,6 +70,7 @@ export async function copyText(text: string) {
     ta.select();
     const ok = document.execCommand("copy");
     ta.remove();
+    if (ok) markUsed();
     return ok;
   }
 }
