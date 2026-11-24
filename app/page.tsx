@@ -4,6 +4,7 @@ import ClientoraCta from "@/components/ClientoraCta";
 import JsonLd from "@/components/JsonLd";
 import { tools } from "@/lib/tools";
 import { SITE } from "@/lib/site";
+import { SOCIAL_URLS } from "@/lib/social";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -13,7 +14,7 @@ export default function Home() {
     <>
       <JsonLd
         data={[
-          { "@context": "https://schema.org", "@type": "WebSite", name: SITE.name, url: SITE.url, publisher: { "@type": "Organization", name: "ClientoraHQ", url: SITE.main, logo: `${SITE.url}/icon.png` } },
+          { "@context": "https://schema.org", "@type": "WebSite", name: SITE.name, url: SITE.url, publisher: { "@type": "Organization", name: "ClientoraHQ", url: SITE.main, logo: `${SITE.url}/icon.png`, sameAs: SOCIAL_URLS } },
           {
             "@context": "https://schema.org",
             "@type": "ItemList",

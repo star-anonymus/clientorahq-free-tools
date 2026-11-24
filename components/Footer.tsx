@@ -2,6 +2,7 @@ import Link from "next/link";
 import { categories, landings, toolsIn } from "@/lib/tools";
 import { SITE } from "@/lib/site";
 import { Mark } from "./Logo";
+import SocialLinks from "./SocialLinks";
 
 export default function Footer() {
   return (
@@ -35,7 +36,8 @@ export default function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-[13px]">
+        <SocialLinks className="mt-12" />
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-[13px]">
           <p>© 2026 ClientoraHQ. Free to use.</p>
           <nav aria-label="Footer" className="flex flex-wrap gap-5">
             <a href={SITE.main} className="hover:text-cyan">clientorahq.com</a>
