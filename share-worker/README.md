@@ -1,6 +1,6 @@
 # Share Worker: Loom-style links for the free Screen Recorder
 
-After a recording, the visitor can press **Get share link**. The video is uploaded in 50 MB parts to a Cloudflare R2
+After a recording, the visitor can press **Get share link**. The video is uploaded in parts (8 MiB or more, with live progress, a stall timeout and resume on Retry; see `lib/shareUpload.ts`) to a Cloudflare R2
 bucket and gets an unlisted link `https://share.clientorahq.com/v/<id>` with a watch page (play, seek, Copy link,
 Download, and a ClientoraHQ card). Nothing is uploaded unless the visitor presses the button.
 

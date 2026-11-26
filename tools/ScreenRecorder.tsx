@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Circle, Copy, Download, ExternalLink, Link2, Mic, MonitorUp, Pause, Play, Square, Trash2, Video, Volume2, RotateCcw } from "lucide-react";
 import { formatBytes, downloadBlob } from "@/lib/files";
 import { toast } from "@/lib/toast";
+import { SHARE_URL, browserNet, uploadShare, type Progress, type Session } from "@/lib/shareUpload";
 
 type State = "idle" | "countdown" | "recording" | "paused" | "done";
 
@@ -16,55 +17,37 @@ const clock = (ms: number) => {
   return `${Math.floor(s / 3600) ? `${Math.floor(s / 3600)}:` : ""}${String(Math.floor(s / 60) % 60).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 };
 
-// Loom-style share links: share-worker/ (Cloudflare Worker + R2) stores the video for 30 days.
-const SHARE_URL = (process.env.NEXT_PUBLIC_SHARE_URL || "https://share.clientorahq.com").replace(/\/$/, "");
-
-async function api<T>(path: string, init: RequestInit): Promise<T> {
-  let r: Response;
-  try { r = await fetch(SHARE_URL + path, init); } catch { throw new Error("Could not reach the share server. Check your internet and press Retry."); }
-  const data = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error((data as { error?: string }).error || `The share server answered ${r.status}. Press Retry.`);
-  return data as T;
-}
-
+// Loom-style share links: share-worker/ (Cloudflare Worker + R2) stores the video for 30 days. Upload: lib/shareUpload.ts.
 type Shared = { id: string; url: string; deleteKey: string };
 
 function ShareBox({ blob }: { blob: Blob }) {
   const [step, setStep] = useState<"ask" | "uploading" | "done" | "error" | "deleted">("ask");
-  const [pct, setPct] = useState(0);
+  const [prog, setProg] = useState<Progress | null>(null);
   const [err, setErr] = useState("");
   const [shared, setShared] = useState<Shared | null>(null);
   const [copied, setCopied] = useState(false);
+  const session = useRef<Session | null>(null);
+  const ctl = useRef<AbortController | null>(null);
+
+  useEffect(() => () => ctl.current?.abort(), []);
 
   const upload = async () => {
-    setStep("uploading"); setPct(0); setErr("");
+    setStep("uploading"); setProg(null); setErr("");
+    const ac = new AbortController();
+    ctl.current = ac;
     try {
-      const s = await api<{ id: string; uploadId: string; partSize: number; deleteKey: string }>("/upload/start", {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: blob.type, size: blob.size }),
-      });
-      const parts: { n: number; etag: string }[] = [];
-      const total = Math.ceil(blob.size / s.partSize);
-      for (let i = 0; i < total; i++) {
-        const piece = blob.slice(i * s.partSize, (i + 1) * s.partSize);
-        let last: unknown;
-        for (let attempt = 0; attempt < 3; attempt++) {
-          try {
-            const r = await api<{ etag: string }>(`/upload/${s.id}/${i + 1}?u=${encodeURIComponent(s.uploadId)}`, { method: "PUT", body: piece });
-            parts.push({ n: i + 1, etag: r.etag }); last = null; break;
-          } catch (e) { last = e; await new Promise((res) => setTimeout(res, 1500 * (attempt + 1))); }
-        }
-        if (last) throw last;
-        setPct(Math.round(((i + 1) / total) * 100));
-      }
-      const done = await api<{ url: string }>(`/upload/${s.id}/done?u=${encodeURIComponent(s.uploadId)}`, {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ parts }),
-      });
-      const sh = { id: s.id, url: done.url, deleteKey: s.deleteKey };
+      const r = await uploadShare(blob, { net: browserNet(), signal: ac.signal, session: session.current, onSession: (s) => { session.current = s; }, onProgress: setProg });
+      const sh = { id: r.session.id, url: r.url, deleteKey: r.session.deleteKey };
+      session.current = null;
       setShared(sh);
-      try { const all = JSON.parse(localStorage.getItem("chq-shares") || "{}"); all[s.id] = s.deleteKey; localStorage.setItem("chq-shares", JSON.stringify(all)); } catch { /* the delete button still works on this page */ }
+      try { const all = JSON.parse(localStorage.getItem("chq-shares") || "{}"); all[sh.id] = sh.deleteKey; localStorage.setItem("chq-shares", JSON.stringify(all)); } catch { /* the delete button still works on this page */ }
       setStep("done");
-    } catch (e) { setErr((e as Error).message || "Upload failed. Press Retry."); setStep("error"); }
+    } catch (e) {
+      setErr((e as Error).message || "The upload stopped.");
+      setStep("error");
+    }
   };
+  const cancel = () => ctl.current?.abort();
 
   const remove = async () => {
     if (!shared) return;
@@ -85,13 +68,17 @@ function ShareBox({ blob }: { blob: Blob }) {
         <button type="button" className="btn btn-primary mt-3" onClick={upload}><Link2 size={18} /> Get share link</button>
       </>)}
       {step === "uploading" && (<>
-        <p className="font-bold">Uploading… {pct}%</p>
-        <div className="mt-3 h-2 overflow-hidden rounded-full bg-line" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><div className="h-full bg-cyan transition-all" style={{ width: `${pct}%` }} /></div>
-        <p className="mt-2 text-[13px] text-fg-3">Keep this tab open until it finishes.</p>
+        <p className="font-bold">{prog ? `Uploading… ${prog.pct}%` : "Starting the upload…"}</p>
+        <div className="mt-3 h-2 overflow-hidden rounded-full bg-line" role="progressbar" aria-valuenow={prog?.pct ?? 0} aria-valuemin={0} aria-valuemax={100}><div className="h-full bg-cyan transition-all" style={{ width: `${prog?.pct ?? 0}%` }} /></div>
+        {prog && <p className="mt-2 text-[13px] text-fg-2">{formatBytes(prog.sent)} of {formatBytes(prog.total)}{prog.parts > 1 ? ` · part ${prog.part} of ${prog.parts}` : ""}</p>}
+        {prog?.retrying && <p className="mt-1 text-[13px] text-warn" role="status">{prog.retrying}</p>}
+        <p className="mt-2 text-[13px] text-fg-3">Keep this tab open until it finishes. A video call or a slow connection makes it slower.</p>
+        <button type="button" className="btn btn-ghost mt-3" onClick={cancel}>Cancel</button>
       </>)}
       {step === "error" && (<>
         <p className="font-bold text-bad">Share link not made</p>
-        <p className="mt-1 text-[14px] text-fg-2">{err}</p>
+        <p className="mt-1 text-[14px] text-fg-2" role="alert">{err}</p>
+        {session.current && session.current.done.length > 0 && <p className="mt-1 text-[13px] text-fg-3">Retry carries on from where it stopped. The video is still here: you can also download it.</p>}
         <button type="button" className="btn btn-primary mt-3" onClick={upload}><RotateCcw size={16} /> Retry</button>
       </>)}
       {step === "done" && shared && (<>
